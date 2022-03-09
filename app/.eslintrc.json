@@ -1,0 +1,30 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": ["plugin:react/recommended", "airbnb", "prettier"],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "plugins": ["react", "prettier"],
+    "rules": {
+        "no-console": "warn",
+        "no-undef": "warn",
+        "no-unused-vars": "warn",
+        "react/prop-types": "off",
+        "react/no-children-prop": "off",
+        "import/no-extraneous-dependencies": "off",
+        "react/jsx-props-no-spreading": "off",
+        "react/no-unstable-nested-components": "off",
+        "no-param-reassign": "off",
+        "import/prefer-default-export": "off",
+        "consistent-return": "off",
+        "react/jsx-no-constructed-context-values": "off",
+        "no-nested-ternary": "off"
+    }
+}

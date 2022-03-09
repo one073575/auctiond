@@ -1,0 +1,15 @@
+{
+    "dbs": {
+        "mongo": {
+            "uri": "mongodb://localhost:27017/bidaway"
+        }
+    },
+    "jwt": {
+        "secret": "sddvj4343r4fcd8f7r43DW2@$"
+    },
+    "cloudinary": {
+        "api": "",
+        "secret": "",
+        "folder": ""
+    }
+}
