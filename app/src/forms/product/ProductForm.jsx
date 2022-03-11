@@ -268,4 +268,15 @@ function ProductForm({
     )
 }
 
+ProductForm.defaultPropd = {
+    submit: () => {},
+    Field: () => {},
+    errors: {},
+    touched: {},
+    loading: false,
+    blur: () => {},
+    values: {},
+    edit: false,
+}
+
 export default ProductForm

@@ -339,7 +339,8 @@ function UserProductListItem({ product }) {
                     </Menu>
                 </HStack>
                 <Text>
-                    {product?.status === 'bid' && (
+                    {(product?.status === 'bid' ||
+                        product?.status === 'bid ended') && (
                         <HStack
                             justifyContent='space-between'
                             width='100%'

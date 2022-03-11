@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react'
 import React, { useCallback, useEffect, useState } from 'react'
 
-function BidTimer({ bidEndDate, size }) {
+function BidTimer({ bidEndDate, size, cb }) {
     const [alert, setAlert] = useState('')
     const [timerDays, setTimerDays] = useState(10)
     const [timerHours, setTimerHours] = useState(10)
@@ -19,37 +19,43 @@ function BidTimer({ bidEndDate, size }) {
 
     let interval
 
-    const startTimer = useCallback(() => {
-        const endDateTime = new Date(bidEndDate).getTime()
+    const startTimer = useCallback(
+        (endDate) => {
+            const endDateTime = new Date(endDate).getTime()
 
-        interval = setInterval(() => {
-            const now = new Date().getTime()
-            const diff = endDateTime - now
+            interval = setInterval(async () => {
+                const now = new Date().getTime()
+                const diff = endDateTime - now
 
-            const days = Math.floor(diff / (24 * 60 * 60 * 1000))
-            const hours = Math.floor(
-                (diff % (24 * 60 * 60 * 1000)) / (1000 * 60 * 60)
-            )
-            const minutes = Math.floor((diff % (60 * 60 * 1000)) / (1000 * 60))
-            const seconds = Math.floor((diff % (60 * 1000)) / 1000)
+                const days = Math.floor(diff / (24 * 60 * 60 * 1000))
+                const hours = Math.floor(
+                    (diff % (24 * 60 * 60 * 1000)) / (1000 * 60 * 60)
+                )
+                const minutes = Math.floor(
+                    (diff % (60 * 60 * 1000)) / (1000 * 60)
+                )
+                const seconds = Math.floor((diff % (60 * 1000)) / 1000)
 
-            if (diff < 0) {
-                // TODO: run a  callback that changes product status to pending or something
-
-                setAlert('Bidding has ended')
-                clearInterval(interval.current)
-            } else {
-                setTimerDays(days)
-                setTimerHours(hours)
-                setTimerMinutes(minutes)
-                setTimerSeconds(seconds)
-            }
-        })
-    }, [bidEndDate])
+                if (diff < 0) {
+                    cb()
+                    setAlert('Bidding has ended')
+                    clearInterval(interval.current)
+                } else {
+                    setTimerDays(days)
+                    setTimerHours(hours)
+                    setTimerMinutes(minutes)
+                    setTimerSeconds(seconds)
+                }
+            })
+        },
+        [cb]
+    )
 
     useEffect(() => {
-        startTimer()
-    }, [])
+        if (bidEndDate) {
+            startTimer(bidEndDate)
+        }
+    }, [bidEndDate])
     return (
         <Box width='100%'>
             {size === 'sm' && !alert && (
@@ -106,6 +112,7 @@ function BidTimer({ bidEndDate, size }) {
 BidTimer.defaultProps = {
     bidEndDate: new Date(),
     size: '',
+    cb: () => {},
 }
 
 export default BidTimer

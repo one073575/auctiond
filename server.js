@@ -6,7 +6,6 @@ import socket from 'socket.io'
 import logger from './api/utils/logger'
 import connectDb from './api/resources/db'
 import bootstrap from './api/app'
-
 // create express app
 let server
 const app = express()
@@ -28,22 +27,6 @@ app.start = async () => {
         bootstrap(app)
 
         server = http.createServer(app)
-
-        // const cors = config.get('cors')
-
-        const io = socket(http, {
-            cors: {
-                origin: '*',
-            },
-        })
-
-        io.on('connect', (_) => {
-            console.log('Socket', _)
-
-            io.on('disconnect', () => {
-                logger.info('Websocket disconnected')
-            })
-        })
 
         server.on('error', (error) => {
             if (error.syscall !== 'listen') {

@@ -13,15 +13,13 @@ import {
     IconButton,
     Center,
 } from '@chakra-ui/react'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Link, NavLink, useHistory } from 'react-router-dom'
 import { FaBell, FaHeart, FaShoppingCart } from 'react-icons/fa'
 import { MdOutlineSell } from 'react-icons/md'
-import { io } from 'socket.io-client'
 import { usePopup } from '../../context/PopupProvider'
 import { useAuth } from '../../context/AuthProvider'
 import ProfileCard from './ProfileCard'
-import { constants } from '../../utils/constants.config'
 
 function Navbar() {
     const { registerOpen, loginOpen, cartOpen } = usePopup()
@@ -33,19 +31,8 @@ function Navbar() {
             label: 'Products',
             path: '/products',
         },
-
-        // {
-        //     label: 'Orders',
-        //     path: '/orders',
-        // },
     ]
 
-    useEffect(() => {
-        const socket = io(constants.baseUrl)
-        socket.on('connect', () => {
-            console.log('hello')
-        })
-    }, [])
     return (
         <Box height='10vh' width='100%' p='20px 0'>
             <Stack

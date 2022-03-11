@@ -1,10 +1,11 @@
 import { Router } from 'express'
 import config from 'config'
 import slugify from 'slugify'
-import { Product } from '../models'
+import { Product, Notification } from '../models'
 import logger from '../../utils/logger'
 import upload from '../../resources/multer'
 import cloudinary from '../../resources/cloudinary'
+import { newNotification } from '../utils/notificationMethods'
 
 const router = Router()
 
@@ -124,6 +125,8 @@ router.get('/user/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         const { id } = req.params
+        const { notify } = req.query
+
         const data = req.body
 
         const existing = await Product.exists({ _id: id })
@@ -137,9 +140,20 @@ router.put('/:id', async (req, res) => {
             updated: Date.now(),
         }
 
+        delete update.message
+
         const toUpdate = await Product.findByIdAndUpdate(id, update, {
             new: true,
         })
+
+        if (notify && toUpdate.id) {
+            const message = {
+                from: 'sys',
+                to: toUpdate.userId,
+                message: data.message,
+            }
+            await newNotification(Notification, message)
+        }
 
         res.status(200).send({ message: 'Product updated', product: toUpdate })
     } catch (error) {

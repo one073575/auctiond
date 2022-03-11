@@ -64,6 +64,29 @@ function StatusForm({ submit, Field, errors, touched, loading, blur, values }) {
                     </FormErrorMessage>
                 </FormControl>
             )}
+            {values.status === 'bid ended' && (
+                <FormControl my='1rem' isInvalid={errors.end && touched.end}>
+                    <FormLabel htmlFor='end'>End date</FormLabel>
+                    <Field
+                        as={Input}
+                        name='end'
+                        id='end'
+                        type='datetime-local'
+                        height='2.5rem'
+                        borderRadius='5px'
+                        min={moment().format('yyyy-MM-DDThh:mm')}
+                        placeholder='select end date'
+                        _focus={{
+                            outlineColor: 'gray.500',
+                        }}
+                    />
+
+                    <FormErrorMessage>
+                        <FormErrorIcon />
+                        {errors.end && touched.end && errors.end}
+                    </FormErrorMessage>
+                </FormControl>
+            )}
 
             <FormControl my='1rem'>
                 <Button

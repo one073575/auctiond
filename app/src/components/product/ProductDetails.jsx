@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import {
     Badge,
     Box,
@@ -14,9 +14,49 @@ import UserAvatar from '../common/UserAvatar'
 import BidComponent from '../Bids/BidComponent'
 import BidTimer from '../products/BidTimer'
 import { useAuth } from '../../context/AuthProvider'
+import invoke from '../../utils/axios.config'
+import { updateProduct } from '../../store/slices/Products'
+import { useDispatch } from 'react-redux'
 
 function ProductDetails({ product }) {
     const { user } = useAuth()
+    const dispatch = useDispatch()
+    const [notBid, setNotBid] = useState(false)
+
+    const updateBidStatus = useCallback(async () => {
+        if (product?.status === 'bid ended') return
+        
+        const update = {
+            status: 'bid ended',
+            message: `Bidding for ${product?.name} has just ended.`,
+        }
+        const { data = {} } = await invoke(
+            'PUT',
+            `product/${product?.id}?notify=true`,
+            update
+        )
+
+        dispatch(updateProduct({ id, product: data?.product }))
+    }, [product])
+
+    const checkBidStatus = (prod) => {
+        if (prod?.status === 'bid' || prod?.status === 'bid ended') {
+            setNotBid(false)
+        } else {
+            setNotBid(true)
+        }
+    }
+
+    // if do notBid is true -> show cart button
+    // if product.userid === user.id -> don't show anything
+    // if product status === bid || bid ended -> don't show cart button
+
+    useEffect(() => {
+        if (product) {
+            checkBidStatus(product)
+        }
+    }, [product])
+
     return (
         <Box>
             <Heading fontSize='3xl'>{product?.name}</Heading>
@@ -79,7 +119,11 @@ function ProductDetails({ product }) {
                     </Badge>
                 </HStack>
                 {product?.status === 'bid' && (
-                    <BidTimer bidEndDate={product?.bidEnd} size='md' />
+                    <BidTimer
+                        bidEndDate={product?.bidEnd}
+                        size='md'
+                        cb={updateBidStatus}
+                    />
                 )}
             </VStack>
 
@@ -89,7 +133,7 @@ function ProductDetails({ product }) {
                 </Box>
             )}
 
-            {product?.status !== 'bid' && product?.userId !== user?.id && (
+            {product?.userId === user?.id ? null : notBid ? (
                 <Box my='1rem'>
                     <HStack spacing='3' alignItems='center'>
                         <Button
@@ -108,7 +152,7 @@ function ProductDetails({ product }) {
                         </Tooltip>
                     </HStack>
                 </Box>
-            )}
+            ) : null}
         </Box>
     )
 }
