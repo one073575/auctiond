@@ -39,7 +39,7 @@ function Product() {
                             borderColor='gray.300'
                             borderRadius='10px'
                             p='20px'>
-                            <Heading mb='1rem' fontSize='md'>
+                            <Heading mb='1rem' fontSize='xl'>
                                 Description
                             </Heading>
                             <Text as='p'>{item?.description}</Text>

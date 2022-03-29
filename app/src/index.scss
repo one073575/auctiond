@@ -14,12 +14,11 @@ html {
 }
 
 body::-webkit-scrollbar {
-    width: 10px; /* width of the entire scrollbar */
+    width: 8px; /* width of the entire scrollbar */
 }
 
 body::-webkit-scrollbar-thumb {
-    background-color: #4a5568; /* color of the scroll thumb */
-    border-radius: 3px; /* roundness of the scroll thumb */
+    background-color: #767c88; /* color of the scroll thumb */
 }
 
 .v {

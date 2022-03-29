@@ -24,26 +24,26 @@ router.post('/register', async (req, res) => {
         })
 
         const savedUser = await newUser.save()
-        // generate a jwt token
 
         const identity = {
             id: savedUser.id,
             email: savedUser.email,
             name: savedUser.name,
-            number: existingUser.number ,
-            active: existingUser.active,
+            number: savedUser.number,
+            active: savedUser.active,
             role: savedUser.email,
+            updated: savedUser.updated,
             created: savedUser.created,
         }
 
         const authIdentity = {
-            id: existingUser.id,
-            name: existingUser.name,
-            email: existingUser.email,
-            created: existingUser.created,
+            id: savedUser.id,
+            name: savedUser.name,
+            email: savedUser.email,
+            created: savedUser.created,
         }
 
-        const authToken = await generateToken(authIdentity, { expiresIn: '2h' })
+        const authToken = await generateToken(authIdentity)
         const accessToken = await generateToken(identity)
 
         res.status(201).send({ authToken, accessToken, admin: identity })

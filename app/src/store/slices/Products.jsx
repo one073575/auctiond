@@ -12,6 +12,7 @@ export const productSlice = createSlice({
     reducers: {
         createProduct: (state, action) => {
             const { payload } = action
+            console.log('createProduct', payload)
             return {
                 ...state,
                 products: [payload, ...state.products],

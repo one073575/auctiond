@@ -34,6 +34,7 @@ function Hero() {
                 {heroImages.map((img) => (
                     <Image
                         height='60vh'
+                        key={img.alt}
                         width='100%'
                         objectFit='cover'
                         borderRadius='20px'

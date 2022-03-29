@@ -2,7 +2,6 @@ import React, { createContext, useContext } from 'react'
 import { useDisclosure } from '@chakra-ui/react'
 import RegisterModal from '../components/modals/RegisterModal'
 import LoginModal from '../components/modals/LoginModal'
-import Cart from '../components/modals/Cart'
 
 const PopupContext = createContext({})
 
@@ -44,11 +43,7 @@ function PopupProvider({ children }) {
                 onClose={loginClose}
                 registerOpen={registerOpen}
             />
-            <Cart
-                isOpen={cartIsOpen}
-                onClose={cartClose}
-                loginOpen={loginOpen}
-            />
+
             {children}
         </PopupContext.Provider>
     )

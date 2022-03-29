@@ -22,8 +22,8 @@ function AppRouter() {
                 <Route exact path='/products' component={Products} />
                 <Route exact path='/products/:slug' component={Product} />
                 <Route exact path='/about' component={About} />
-                <Route exact path='/cart/:id' component={Cart} />
-                <Route exact path='/wishlist/:id' component={WishList} />
+                <Route exact path='/cart' component={Cart} />
+                <Route exact path='/wishlist' component={WishList} />
                 <PrivateRoute exact path='/profile/:id' component={Profile} />
                 <PrivateRoute
                     exact

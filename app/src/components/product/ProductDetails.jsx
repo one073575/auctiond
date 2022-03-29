@@ -16,27 +16,38 @@ import BidTimer from '../products/BidTimer'
 import { useAuth } from '../../context/AuthProvider'
 import invoke from '../../utils/axios.config'
 import { updateProduct } from '../../store/slices/Products'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useAlert } from '../../context/AlertProvider'
+import { setWishLoadingState } from '../../store/slices/Wishlist'
+import { setCartLoadingState, addCartItem } from '../../store/slices/Cart'
+import { v4 as uuidv4 } from 'uuid'
 
 function ProductDetails({ product }) {
     const { user } = useAuth()
     const dispatch = useDispatch()
+
+    const { setMessage, setError } = useAlert()
     const [notBid, setNotBid] = useState(false)
 
-    const updateBidStatus = useCallback(async () => {
-        if (product?.status === 'bid ended') return
-        
-        const update = {
-            status: 'bid ended',
-            message: `Bidding for ${product?.name} has just ended.`,
-        }
-        const { data = {} } = await invoke(
-            'PUT',
-            `product/${product?.id}?notify=true`,
-            update
-        )
+    const { loading } = useSelector((state) => state.wishlist)
+    const { loading: cartLoading } = useSelector((state) => state.cart)
 
-        dispatch(updateProduct({ id, product: data?.product }))
+    const updateBidStatus = useCallback(async () => {
+        if (product?.status === 'bid') {
+            const update = {
+                status: 'bid ended',
+                message: `Bidding for ${product?.name} has just ended.`,
+            }
+            const { data = {} } = await invoke(
+                'PUT',
+                `product/${product?.id}?notify=true`,
+                update
+            )
+
+            dispatch(updateProduct({ id, product: data?.product }))
+        } else {
+            return
+        }
     }, [product])
 
     const checkBidStatus = (prod) => {
@@ -44,6 +55,68 @@ function ProductDetails({ product }) {
             setNotBid(false)
         } else {
             setNotBid(true)
+        }
+    }
+
+    const addToWishList = async () => {
+        try {
+            dispatch(setWishLoadingState(true))
+
+            const params = {
+                userId: user.id,
+                productId: product?.id,
+            }
+
+            const { data = {} } = await invoke('POST', 'wishlist', params)
+            setMessage(data.message)
+
+            dispatch(setWishLoadingState(false))
+        } catch (error) {
+            dispatch(setWishLoadingState(false))
+            setError(error.response.data || 'Something went wrong')
+        }
+    }
+
+    const addToCart = async () => {
+        try {
+            dispatch(setCartLoadingState(true))
+
+            const params = {
+                id: uuidv4(),
+                userId: user.id,
+                productId: product?.id,
+                product,
+                quantity: 1,
+                created: Date.now(),
+            }
+
+            const cartExists = JSON.parse(localStorage.getItem('cart'))
+
+            if (cartExists) {
+                const isInCart = cartExists.find(
+                    (item) => item.productId === product.id
+                )
+
+                if (isInCart) {
+                    setError('Product already in cart')
+                    dispatch(setCartLoadingState(false))
+                    return
+                }
+                // get the item and add the new item to the cart
+                const newProducts = [...cartExists, params]
+                dispatch(addCartItem(params))
+                localStorage.setItem('cart', JSON.stringify(newProducts))
+            } else {
+                // create a new cart
+                localStorage.setItem('cart', JSON.stringify([params]))
+                dispatch(addCartItem(params))
+            }
+
+            setMessage('Product added to cart')
+            dispatch(setCartLoadingState(false))
+        } catch (error) {
+            dispatch(setCartLoadingState(false))
+            setError(error.message || 'Something went wrong')
         }
     }
 
@@ -78,7 +151,7 @@ function ProductDetails({ product }) {
                 spacing='4'
                 justifyContent='flex-start'>
                 <Heading fontSize='xl'>Ksh {product?.price}</Heading>
-                <HStack spacing='1' wrap='wrap'>
+                <HStack wrap='wrap' gap='5px'>
                     {product?.featured && (
                         <Badge
                             borderRadius='5px'
@@ -137,17 +210,27 @@ function ProductDetails({ product }) {
                 <Box my='1rem'>
                     <HStack spacing='3' alignItems='center'>
                         <Button
+                            isLoading={cartLoading}
+                            isDisabled={!user}
+                            onClick={addToCart}
                             height='2.5rem'
                             colorScheme='blue'
                             width='100%'
+                            _focus={{ outline: 'none' }}
+                            _active={{ outline: 'none' }}
                             borderRadius='5px'>
                             Add to cart
                         </Button>
                         <Tooltip hasArrow label='Add to wishlist'>
                             <IconButton
-                                icon={<FaHeart />}
+                                isDisabled={!user}
+                                isLoading={loading}
                                 bg='#fff'
+                                icon={<FaHeart />}
                                 _hover={{ bg: '#fff' }}
+                                onClick={addToWishList}
+                                _focus={{ outline: 'none' }}
+                                _active={{ outline: 'none' }}
                             />
                         </Tooltip>
                     </HStack>

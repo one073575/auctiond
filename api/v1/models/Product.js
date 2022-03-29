@@ -30,6 +30,11 @@ const ProductSchema = new mongoose.Schema({
         default: [],
     },
 
+    shipping: {
+        type: Number,
+        default: 0.0,
+    },
+
     price: {
         type: Number,
         default: 0.0,
@@ -102,10 +107,6 @@ const ProductSchema = new mongoose.Schema({
         default: Date.now,
     },
 })
-
-/**
-    if (deal is true) -> show discount input
-*/
 
 ProductSchema.set('toJSON', {
     virtuals: true,

@@ -12,8 +12,10 @@ import {
     MenuDivider,
     MenuItem,
     MenuList,
+    Stack,
     Text,
     useDisclosure,
+    VStack,
 } from '@chakra-ui/react'
 import moment from 'moment'
 import { CgMenuRight } from 'react-icons/cg'
@@ -127,11 +129,15 @@ function UserProductListItem({ product }) {
                 product={product}
             />
 
-            <Box
+            <VStack
                 key={product?.id}
+                alignItems='flex-start'
+                justifyContent='space-between'
                 bg='gray.50'
+                width='100%'
                 borderRadius='10px'
                 position='relative'
+                spacing={4}
                 p='10px'>
                 <Box
                     height='30vh'
@@ -190,46 +196,74 @@ function UserProductListItem({ product }) {
                         src={product?.images[0]?.url}
                     />
                 </Box>
-                <HStack
-                    my='1rem'
-                    alignItems='center'
-                    justifyContent='space-between'>
-                    <Badge
-                        fontSize='0.9rem'
-                        colorScheme='green'
-                        fontWeight='500'
-                        borderRadius='3px'
-                        textTransform='capitalize'>
-                        KSH {product?.price}
-                    </Badge>
+                <Box width='100%'>
+                    <HStack
+                        alignItems='center'
+                        width='100%'
+                        justifyContent='space-between'>
+                        <Badge
+                            fontSize='0.9rem'
+                            colorScheme='green'
+                            fontWeight='500'
+                            borderRadius='3px'
+                            textTransform='capitalize'>
+                            KSH {product?.price}
+                        </Badge>
 
-                    <HStack>
-                        <Badge
-                            fontSize='0.9rem'
-                            colorScheme={
-                                product?.status === 'new'
-                                    ? 'orange'
-                                    : product?.status === 'sale'
-                                    ? 'blue'
-                                    : product?.status === 'bid'
-                                    ? 'blue'
-                                    : 'red'
-                            }
-                            fontWeight='500'
-                            borderRadius='3px'
-                            textTransform='capitalize'>
-                            {product?.status}
-                        </Badge>
-                        <Badge
-                            fontSize='0.9rem'
-                            colorScheme='gray'
-                            fontWeight='500'
-                            borderRadius='3px'
-                            textTransform='capitalize'>
-                            {product?.featured ? 'Featured' : 'Not featured'}
-                        </Badge>
+                        <HStack>
+                            <Badge
+                                fontSize='0.9rem'
+                                colorScheme={
+                                    product?.status === 'new'
+                                        ? 'orange'
+                                        : product?.status === 'sale'
+                                        ? 'blue'
+                                        : product?.status === 'bid'
+                                        ? 'blue'
+                                        : 'red'
+                                }
+                                fontWeight='500'
+                                borderRadius='3px'
+                                textTransform='capitalize'>
+                                {product?.status}
+                            </Badge>
+                            <Badge
+                                fontSize='0.9rem'
+                                colorScheme='gray'
+                                fontWeight='500'
+                                borderRadius='3px'
+                                textTransform='capitalize'>
+                                {product?.featured
+                                    ? 'Featured'
+                                    : 'Not featured'}
+                            </Badge>
+                        </HStack>
                     </HStack>
-                </HStack>
+                    <Box width='100%'>
+                        {(product?.status === 'bid' ||
+                            product?.status === 'bid ended') && (
+                            <HStack
+                                justifyContent='space-between'
+                                width='100%'
+                                my='0.5rem'>
+                                <BidTimer
+                                    bidEndDate={product?.bidEnd}
+                                    size='sm'
+                                />
+                                <Badge
+                                    cursor='pointer'
+                                    colorScheme='blue'
+                                    onClick={bidOpen}
+                                    fontWeight='500'
+                                    borderRadius='5px'
+                                    p='3px'
+                                    textDecoration='ButtonFace'>
+                                    Show bids &rarr;
+                                </Badge>
+                            </HStack>
+                        )}
+                    </Box>
+                </Box>
                 <HStack
                     width='100%'
                     justifyContent='space-between'
@@ -243,18 +277,17 @@ function UserProductListItem({ product }) {
                     </Box>
                     <Menu closeOnSelect closeOnBlur>
                         <MenuButton
-                            bg='gray.300'
+                            bg='gray.200'
                             _active={{
-                                bg: 'gray.300',
                                 outline: 'none',
                             }}
-                            _focus={{ bg: 'gray.300', outline: 'none' }}
-                            _hover={{ bg: 'gray.300', outline: 'none' }}
+                            _focus={{ outline: 'none' }}
+                            _hover={{ bg: 'gray.200', outline: 'none' }}
                             edit
                             as={IconButton}
                             aria-label='Options'
                             icon={<CgMenuRight />}
-                            variant='solid'
+                            variant='outline'
                         />
                         <MenuList
                             border='2px solid'
@@ -338,28 +371,7 @@ function UserProductListItem({ product }) {
                         </MenuList>
                     </Menu>
                 </HStack>
-                <Text>
-                    {(product?.status === 'bid' ||
-                        product?.status === 'bid ended') && (
-                        <HStack
-                            justifyContent='space-between'
-                            width='100%'
-                            my='0.5rem'>
-                            <BidTimer bidEndDate={product?.bidEnd} size='sm' />
-                            <Badge
-                                cursor='pointer'
-                                colorScheme='blue'
-                                onClick={bidOpen}
-                                fontWeight='500'
-                                borderRadius='5px'
-                                p='3px'
-                                textDecoration='ButtonFace'>
-                                Show bids &rarr;
-                            </Badge>
-                        </HStack>
-                    )}
-                </Text>
-            </Box>
+            </VStack>
         </>
     )
 }

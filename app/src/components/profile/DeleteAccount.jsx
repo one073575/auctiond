@@ -8,11 +8,34 @@ import {
     Text,
     useDisclosure,
 } from '@chakra-ui/react'
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
+import { useAuth } from '../../context/AuthProvider'
 import DeleteAccountModal from '../modals/DeleteAccountModal'
+import { clearBidStore } from '../../store/slices/Bids'
+import { clearOrderStore } from '../../store/slices/Orders'
+import { clearProductStore } from '../../store/slices/Products'
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 
 function DeleteAccount() {
     const { isOpen, onClose, onOpen } = useDisclosure()
+    const { profileDeleted, logout } = useAuth()
+    const dispatch = useDispatch()
+    const history = useHistory()
+
+    const clearUserState = useCallback(async () => {
+        logout()
+        dispatch(clearBidStore())
+        dispatch(clearOrderStore())
+        dispatch(clearProductStore())
+        history.push('/')
+    }, [])
+
+    useEffect(() => {
+        if (profileDeleted) {
+            clearUserState()
+        }
+    }, [profileDeleted])
     return (
         <>
             <DeleteAccountModal onClose={onClose} isOpen={isOpen} />

@@ -16,6 +16,7 @@ import {
 } from '@chakra-ui/react'
 import DropZone from '../../components/common/DropZone'
 import ProductGallery from '../../components/products/ProductGallery'
+import { categories } from '../../utils/categories'
 
 function ProductForm({
     submit,
@@ -121,13 +122,11 @@ function ProductForm({
                         _focus={{
                             outlineColor: 'gray.500',
                         }}>
-                        <option value='electronics'>Electronics</option>
-                        <option value='clothing'>Clothing</option>
-                        <option value='accessories'>Accessories</option>
-                        <option value='shoes'>Shoes</option>
-                        <option value='furniture'>Furniture</option>
-                        <option value='decor'>Decor</option>
-                        <option value='technology'>Technology</option>
+                        {categories.map((category) => (
+                            <option value={category.toLowerCase()}>
+                                {category}
+                            </option>
+                        ))}
                     </Field>
 
                     <FormErrorMessage>
@@ -165,6 +164,31 @@ function ProductForm({
                 </FormControl>
             </Grid>
 
+            <FormControl
+                my='1rem'
+                isInvalid={errors.shipping && touched.shipping}>
+                <FormLabel htmlFor='shipping'>Shipping Cost</FormLabel>
+
+                <Field
+                    as={Input}
+                    name='shipping'
+                    id='shipping'
+                    type='number'
+                    height='3rem'
+                    borderRadius='5px'
+                    placeholder='Add shipping'
+                    onBlur={blur}
+                    _focus={{
+                        outlineColor: 'gray.500',
+                    }}
+                />
+
+                <FormErrorMessage>
+                    <FormErrorIcon />
+                    {errors.shipping && touched.shipping && errors.shipping}
+                </FormErrorMessage>
+            </FormControl>
+
             <FormControl my='1rem' isInvalid={errors.deal && touched.deal}>
                 <HStack>
                     <Field
@@ -180,7 +204,7 @@ function ProductForm({
                             outlineColor: 'gray.500',
                         }}
                     />
-                    <Text>Check for discounted prices</Text>
+                    <Text>Provide a discount</Text>
                 </HStack>
 
                 <FormErrorMessage>

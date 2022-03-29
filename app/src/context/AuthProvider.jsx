@@ -20,6 +20,7 @@ function AuthProvider({ children }) {
         user: null,
         users: [],
         loading: false,
+        profileDeleted: false,
         isAuthenticated: false,
     })
 
@@ -38,6 +39,7 @@ function AuthProvider({ children }) {
                 isAuthenticated: true,
             })
         } catch (error) {
+            console.log(error)
             setState({ ...state, loading: false })
             setAuthError(error.response.data || 'Something went wrong')
         }
@@ -57,6 +59,8 @@ function AuthProvider({ children }) {
                 user: data.user,
                 isAuthenticated: true,
             })
+
+            setMessage(`Welcome, your account has been created`)
         } catch (error) {
             setState({ ...state, loading: false })
             setAuthError(error.response.data || 'Something went wrong')
@@ -96,9 +100,8 @@ function AuthProvider({ children }) {
         }
     }
 
-    async function logout() {
+    const logout = useCallback(() => {
         try {
-            // TODO: reset redux store = function to reset
             Cookies.remove('auth-token')
             Cookies.remove('access-token')
 
@@ -112,7 +115,7 @@ function AuthProvider({ children }) {
         } catch (error) {
             setAuthError(error || 'Something went wrong')
         }
-    }
+    }, [])
 
     async function deleteUser(id = '') {
         try {
@@ -122,6 +125,7 @@ function AuthProvider({ children }) {
             setState({
                 ...state,
                 loading: false,
+                profileDeleted: true,
                 users: state.users.filter((user) => user.id !== data.user.id),
             })
             setMessage(data.message)

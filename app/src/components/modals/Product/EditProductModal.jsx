@@ -25,6 +25,7 @@ function EditProductModal({ onClose, isOpen, product }) {
         condition: yup.string().required('Condition field is required'),
         deal: yup.boolean(),
         discount: yup.number(),
+        shipping: yup.number(),
         description: yup.string().required('Description field is required'),
     })
 
@@ -57,6 +58,7 @@ function EditProductModal({ onClose, isOpen, product }) {
                             condition: product?.condition || '',
                             deal: product?.deal || false,
                             discount: product?.discount || 0,
+                            shipping: product?.shipping || 0,
                             description: product?.description || '',
                         }}
                         validationSchema={validation}

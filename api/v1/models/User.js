@@ -13,7 +13,6 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        unique: true,
     },
 
     number: {
@@ -28,12 +27,12 @@ const UserSchema = new mongoose.Schema({
 
     updated: {
         type: Date,
-        default: new Date().toLocaleString(),
+        default: Date.now,
     },
 
     created: {
         type: Date,
-        default: new Date().toLocaleString(),
+        default: Date.now,
     },
 })
 

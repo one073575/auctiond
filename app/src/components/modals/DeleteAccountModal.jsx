@@ -6,8 +6,11 @@ import Modall from '../common/Modall'
 import { useAuth } from '../../context/AuthProvider'
 import DeleteAccountForm from '../../forms/profile/DeleteAccountForm'
 
+import { useHistory } from 'react-router-dom'
+
 function DeleteAccountModal({ isOpen, onClose }) {
-    const { user, deleteUser, loading } = useAuth()
+    const history = useHistory()
+    const { user, deleteUser, loading, logout } = useAuth()
 
     const validation = yup.object().shape({
         confirm: yup.string().required('Confirmation string is required'),
@@ -45,7 +48,9 @@ function DeleteAccountModal({ isOpen, onClose }) {
                         if (values.confirm === user?.id) {
                             await deleteUser(user?.id)
                         }
+
                         _.resetForm()
+                        onClose()
                     }}>
                     {({ errors, touched, handleBlur, handleSubmit }) => (
                         <DeleteAccountForm

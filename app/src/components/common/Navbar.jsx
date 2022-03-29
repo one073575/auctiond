@@ -22,7 +22,7 @@ import { useAuth } from '../../context/AuthProvider'
 import ProfileCard from './ProfileCard'
 
 function Navbar() {
-    const { registerOpen, loginOpen, cartOpen } = usePopup()
+    const { registerOpen, loginOpen } = usePopup()
     const { user } = useAuth()
     const history = useHistory()
 
@@ -95,15 +95,14 @@ function Navbar() {
                         <Icon
                             as={FaHeart}
                             fontSize='1.1rem'
-                            onClick={() =>
-                                history.push(`/wishlist/${user?.id}`)
-                            }
+                            cursor='pointer'
+                            onClick={() => history.push(`/wishlist`)}
                         />
                         <Icon
                             as={FaShoppingCart}
                             fontSize='1.1rem'
                             cursor='pointer'
-                            onClick={cartOpen}
+                            onClick={() => history.push(`/cart`)}
                         />
 
                         {user && (

@@ -41,7 +41,7 @@ function Categories() {
         <Box height='auto' minHeight='20vh' width='100%' my='2rem'>
             <HStack spacing='5'>
                 <Heading fontSize='1.5rem'>Explore Popular Categories </Heading>
-                <Text as={Link} to='/categories' fontSize='1rem'>
+                <Text as={Link} to='/products' fontSize='1rem'>
                     View all &rarr;
                 </Text>
             </HStack>
@@ -52,6 +52,7 @@ function Categories() {
                         borderRadius='10px'
                         bg='#fff'
                         p='30px'
+                        key={deal.label}
                         shadow='md'>
                         <VStack
                             as={Link}

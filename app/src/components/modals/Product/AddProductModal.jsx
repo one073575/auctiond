@@ -25,6 +25,7 @@ function AddProductModal({ onClose, isOpen }) {
         condition: yup.string().required('Condition field is required'),
         deal: yup.boolean(),
         discount: yup.number(),
+        shipping: yup.number(),
         description: yup.string().required('Description field is required'),
     })
 
@@ -52,6 +53,7 @@ function AddProductModal({ onClose, isOpen }) {
                             price: 0.0,
                             quantity: 0,
                             category: '',
+                            shipping: 0.0,
                             condition: '',
                             deal: false,
                             discount: 0,
@@ -71,6 +73,8 @@ function AddProductModal({ onClose, isOpen }) {
                                     'product',
                                     params
                                 )
+
+                                console.log(data.product)
 
                                 dispatch(createProduct(data.product))
                                 setMessage(data.message)

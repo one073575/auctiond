@@ -23,7 +23,7 @@ router.post('/', async (req, res) => {
 
         res.status(201).send({
             message: 'Product successfully added',
-            savedProduct,
+            product: savedProduct,
         })
     } catch (error) {
         logger.error(error)
@@ -59,15 +59,28 @@ router.post('/upload', upload.array('files', 5), async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         // fetch products -> add filtering
-        const { search } = req.query
+        const { search, category, deal } = req.query
 
-        let query
+        const query = { active: true }
 
         if (search) {
-            query = { active: true, $text: { $search: search } }
-        } else {
-            query = { active: true }
+            query.$text = { $search: search }
         }
+
+        if (category) {
+            query.category = category
+        }
+
+        if (deal) {
+            query.deal = deal
+        }
+
+        if (search && category && deal) {
+            query.$text = { $search: search }
+            query.category = category
+            query.deal = deal
+        }
+
         const products = await Product.find(query).sort({
             created: 'desc',
         })

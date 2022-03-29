@@ -34,7 +34,7 @@ function AlertProvider({ children }) {
                 description: alert.error,
                 status: 'error',
                 isClosable: true,
-                position: 'top',
+                position: 'bottom',
                 duration: 4000,
             })
         }
@@ -45,7 +45,7 @@ function AlertProvider({ children }) {
                 description: alert.message,
                 status: 'success',
                 isClosable: true,
-                position: 'top',
+                position: 'bottom',
                 duration: 4000,
             })
         }

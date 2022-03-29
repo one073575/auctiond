@@ -7,25 +7,25 @@ function Deals() {
         {
             img: '/images/deals/img1.jpg',
             label: 'Furniture',
-            link: '/products/deals/furniture',
+            link: '/products?deal=true&category=furniture',
             alt: 'furniture',
         },
         {
             img: '/images/deals/img2.jpg',
             label: 'Decor',
-            link: '/products/deals/decor',
+            link: '/products?deal=true&category=decor',
             alt: 'decor',
         },
         {
             img: '/images/deals/img3.jpg',
             label: 'Technology',
-            link: '/products/deals/technology',
+            link: '/products?deal=true&category=technology',
             alt: 'technology',
         },
         {
             img: '/images/deals/img4.jpg',
             label: 'Footware',
-            link: '/products/deals/footware',
+            link: '/products?deal=true&category=footware',
             alt: 'footware',
         },
     ]
@@ -33,7 +33,7 @@ function Deals() {
         <Box height='auto' minHeight='20vh' width='100%' my='2rem'>
             <HStack spacing='5'>
                 <Heading fontSize='1.5rem'>Explore Our Hot Deals </Heading>
-                <Text as={Link} to='/products/hotdeals' fontSize='1rem'>
+                <Text as={Link} to='/products?deal=true' fontSize='1rem'>
                     View all &rarr;
                 </Text>
             </HStack>
@@ -44,6 +44,7 @@ function Deals() {
                         borderRadius='10px'
                         bg='#fff'
                         p='10px'
+                        key={deal.link}
                         shadow='xl'>
                         <HStack
                             as={Link}
